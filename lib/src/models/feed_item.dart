@@ -37,12 +37,12 @@ class FeedItem {
     // Optional fields:
     String approx_traffic;
     try {
-      approx_traffic = node.findElements('approx_traffic').single.text;
+      approx_traffic = node.findElements('approx_traffic', namespace: 'https://trends.google.com/trends/trendingsearches/daily').single.text;
     } catch (e) {}
 
     String picture;
     try {
-      picture = node.findElements('picture').single.text;
+      picture = node.findElements('picture', namespace: 'https://trends.google.com/trends/trendingsearches/daily').single.text;
     } catch (e) {}
     
     String title;
