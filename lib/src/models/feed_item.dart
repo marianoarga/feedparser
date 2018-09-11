@@ -1,8 +1,10 @@
 import 'package:xml/xml.dart' as xml;
 
 import 'feed_enclosure.dart';
+import 'news_item.dart';
 
 class FeedItem {
+  final List<NewsItem> related_news;
   final String picture;
   final String approx_traffic;
   final String title;
@@ -18,6 +20,7 @@ class FeedItem {
   final String itunesDuration;
 
   FeedItem({
+    this.related_news,
     this.picture,
     this.approx_traffic,
     this.title,
@@ -35,6 +38,14 @@ class FeedItem {
 
   factory FeedItem.fromXml(xml.XmlElement node, bool strict) {
     // Optional fields:
+    List<NewsItem> related_news;
+    try {
+      related_news = node.findElements('news_item', namespace: 'https://trends.google.com/trends/trendingsearches/daily').map((itemElement) => new NewsItem.fromXml(itemElement))
+          .toList();
+    } catch (e) {
+      print(e.toString());
+    }
+
     String approx_traffic;
     try {
       approx_traffic = node.findElements('approx_traffic', namespace: 'https://trends.google.com/trends/trendingsearches/daily').single.text;
@@ -106,6 +117,7 @@ class FeedItem {
     } catch (e) {}
 
     return new FeedItem(
+      related_news: related_news,
       picture: picture,
       approx_traffic: approx_traffic,
       title: title,
@@ -124,6 +136,7 @@ class FeedItem {
 
   String toString() {
     return '''
+      related_news: $related_news
       picture: $picture
       approx_traffic: $approx_traffic
       title: $title
